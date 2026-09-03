@@ -247,12 +247,11 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMJR7HxijdmLqyocDuH
     const current = JSON.parse(localStorage.getItem(key) || '{}');
     current[field] = value;
     localStorage.setItem(key, JSON.stringify(current));
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const clientName = urlParams.get('id') || '';
     
-    const payload = {
-      client: clientName,
+const urlParams = new URLSearchParams(window.location.search);
+    // Prende l'id dall'indirizzo (es. ?id=Amore) e lo trasforma subito in maiuscolo
+    const rawClient = urlParams.get('id') || 'AMORE';
+    const clientName = rawClient.trim().toUpperCase();
       day: current.day || '',
       exercise: current.exercise || key,
       weight: field === 'weight' ? value : (current.weight || ''),
