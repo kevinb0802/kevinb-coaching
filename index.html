@@ -2,142 +2,184 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coaching App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PT Kevin Beraldo</title>
+  
+  <!-- Icona per iOS quando salvata sulla schermata Home -->
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0d1117">
+
   <style>
     :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --accent: #38bdf8;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #334155;
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --accent: #2563eb;
+      --accent-light: #3b82f6;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border: #21262d;
     }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text);
       margin: 0;
-      padding: 16px;
+      padding: 20px 16px 40px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* Logo & Header */
     .header {
       text-align: center;
       margin-bottom: 24px;
+      margin-top: 10px;
     }
-    .header h1 {
-      font-size: 1.5rem;
-      margin: 0 0 8px 0;
-      color: var(--accent);
+
+    .logo {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.2));
     }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--accent-light);
+      letter-spacing: 2px;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Card Esercizio */
     .card {
       background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 18px;
       margin-bottom: 16px;
       border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
-    .card-title {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .meta-group {
+
+    .card-header {
       display: flex;
-      gap: 12px;
-      font-size: 0.9rem;
-      color: var(--accent);
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 12px;
     }
-    .data-row {
+
+    .exercise-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .muscle-badge {
+      background-color: rgba(37, 99, 235, 0.15);
+      color: var(--accent-light);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .stats-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed var(--border);
-      font-size: 0.85rem;
-    }
-    .data-label {
-      color: var(--text-muted);
-    }
-    .note-box {
-      background: rgba(255,255,255,0.05);
-      border-left: 3px solid var(--accent);
-      padding: 8px;
-      margin-top: 8px;
-      font-size: 0.85rem;
-      border-radius: 0 4px 4px 0;
-    }
-    #loader {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px;
+      border-radius: 10px;
       text-align: center;
-      padding: 40px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-light);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
       color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .notes {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+      line-height: 1.4;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>Scheda Allenamento</h1>
-    <div id="user-info">Caricamento dati...</div>
+  <div class="container">
+    <!-- Header con Logo KB -->
+    <div class="header">
+      <img src="logo.png" alt="Logo PT Kevin Beraldo" class="logo">
+      <h1 class="brand-title">Kevin Beraldo</h1>
+      <div class="brand-subtitle">Personal Trainer</div>
+    </div>
+
+    <!-- Anteprima Card Esercizio -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="exercise-title">Panca Piana Bilanciere</h2>
+        <span class="muscle-badge">Petto</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-value">4</span>
+          <span class="stat-label">Serie</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">8</span>
+          <span class="stat-label">Reps</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">90"</span>
+          <span class="stat-label">Rest</span>
+        </div>
+      </div>
+      <div class="notes">Fermo al petto di 1 secondo. Esecuzione controllata nella fase eccentrica.</div>
+    </div>
   </div>
 
-  <div id="workout-container">
-    <div id="loader">Caricamento in corso...</div>
-  </div>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwRbXk4nFHL2bLM88Z4aLye9wr0-ClLDgaaIeIt555ZatGz0_Tqcyos8v2Zu4Ipk6Uv5g/exec";
-
-    async function loadWorkoutData() {
-      try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        
-        const container = document.getElementById('workout-container');
-        container.innerHTML = '';
-
-        if (data.length === 0) {
-          container.innerHTML = '<p style="text-align:center;">Nessun dato trovato.</p>';
-          return;
-        }
-
-        document.getElementById('user-info').innerText = `Cliente: ${data[0].cliente} | ${data[0].giorno}`;
-
-        data.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          
-          card.innerHTML = `
-            <div class="card-title">${item.esercizio}</div>
-            <div class="meta-group">
-              <span><b>Serie x Rep:</b> ${item.serieRep}</span>
-              <span><b>Recupero:</b> ${item.recupero}"</span>
-            </div>
-            
-            <div class="data-row">
-              <div><span class="data-label">Intensità (RIR/RPE):</span><br>${item.intensita || '-'}</div>
-              <div><span class="data-label">Kg Usati:</span><br>${item.kgUsati || '-'}</div>
-            </div>
-
-            <div class="data-row">
-              <div><span class="data-label">Rep Effettive:</span><br>${item.repEffettive || '-'}</div>
-            </div>
-
-            ${item.noteTecniche ? `<div class="note-box"><b>Note Tecniche:</b> ${item.noteTecniche}</div>` : ''}
-            ${item.noteCliente ? `<div class="note-box" style="border-color: #f59e0b;"><b>Note Cliente:</b> ${item.noteCliente}</div>` : ''}
-          `;
-          
-          container.appendChild(card);
-        });
-
-      } catch (error) {
-        console.error("Errore nel caricamento dei dati:", error);
-        document.getElementById('workout-container').innerHTML = '<p style="text-align:center; color:#ef4444;">Errore di caricamento dati dall\'API.</p>';
-      }
-    }
-
-    loadWorkoutData();
-  </script>
 </body>
 </html>
