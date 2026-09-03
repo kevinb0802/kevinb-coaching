@@ -4,11 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PT Kevin Beraldo</title>
+
+  <!-- Icona per iOS (iPhone/iPad) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="kevinlogo.jpg">
   
-  <!-- Icona per iOS quando salvata sulla schermata Home -->
-  <link rel="apple-touch-icon" href="kevinlogo.png">
+  <!-- Icone per Android / Samsung / Chrome -->
+  <link rel="icon" type="image/jpeg" sizes="192x192" href="kevinlogo.jpg">
+  <link rel="shortcut icon" href="kevinlogo.jpg">
+
+  <!-- Configurazione PWA per iOS & Android -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PT Kevin Beraldo">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0d1117">
 
   <style>
@@ -47,13 +55,13 @@
     /* Logo & Header */
     .header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       margin-top: 10px;
     }
 
     .logo {
-      width: 100px;
-      height: 100px;
+      width: 90px;
+      height: 90px;
       object-fit: contain;
       margin-bottom: 12px;
       border-radius: 16px;
@@ -75,6 +83,37 @@
       letter-spacing: 2px;
       margin-top: 4px;
       text-transform: uppercase;
+    }
+
+    /* Pulsanti selezione giorno */
+    .day-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .day-btn {
+      flex: 1;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .day-btn.active {
+      background-color: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);
     }
 
     /* Card Esercizio */
@@ -146,41 +185,122 @@
       line-height: 1.4;
       font-style: italic;
     }
+
+    #loading {
+      text-align: center;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- Header con Logo KB -->
     <div class="header">
-      <img src="kevinlogo.png" onerror="this.onerror=null; this.src='kevinlogo.jpg';" alt="Logo PT Kevin Beraldo" class="logo">
+      <img src="kevinlogo.jpg" onerror="this.onerror=null; this.src='kevinlogo.png';" alt="Logo PT Kevin Beraldo" class="logo">
       <h1 class="brand-title">Kevin Beraldo</h1>
       <div class="brand-subtitle">Personal Trainer</div>
     </div>
 
-    <!-- Anteprima Card Esercizio -->
-    <div class="card">
-      <div class="card-header">
-        <h2 class="exercise-title">Panca Piana Bilanciere</h2>
-        <span class="muscle-badge">Petto</span>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-value">4</span>
-          <span class="stat-label">Serie</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">8</span>
-          <span class="stat-label">Reps</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">90"</span>
-          <span class="stat-label">Rest</span>
-        </div>
-      </div>
-      <div class="notes">Fermo al petto di 1 secondo. Esecuzione controllata nella fase eccentrica.</div>
+    <!-- Selettore Giorni -->
+    <div class="day-selector">
+      <button class="day-btn active" onclick="filterDay('Giorno A', this)">Giorno A</button>
+      <button class="day-btn" onclick="filterDay('Giorno B', this)">Giorno B</button>
+      <button class="day-btn" onclick="filterDay('Giorno C', this)">Giorno C</button>
+      <button class="day-btn" onclick="filterDay('Giorno D', this)">Giorno D</button>
+    </div>
+
+    <!-- Contenitore Esercizi -->
+    <div id="workout-container">
+      <div id="loading">Caricamento scheda...</div>
     </div>
   </div>
 
+  <script>
+    // Incolla qui il tuo link CSV pubblicato sul Web da Google Sheets
+    const SHEET_CSV_URL = 'INSERISCI_QUI_IL_LINK_CSV';
+
+    let allExercises = [];
+
+    async function loadSheetData() {
+      if (SHEET_CSV_URL === 'INSERISCI_QUI_IL_LINK_CSV') {
+        // Anteprima statica finché non colleghi il Google Sheet
+        allExercises = [
+          { giorno: 'Giorno A', esercizio: 'Panca Piana Bilanciere', gruppo: 'Petto', serie: '4', reps: '8', rest: '90"', note: 'Fermo al petto di 1 secondo. Esecuzione controllata nella fase eccentrica.' }
+        ];
+        filterDay('Giorno A');
+        return;
+      }
+
+      try {
+        const response = await fetch(SHEET_CSV_URL);
+        const csvText = await response.text();
+        allExercises = parseCSV(csvText);
+        filterDay('Giorno A');
+      } catch (error) {
+        document.getElementById('workout-container').innerHTML = `<div id="loading">Errore nel caricamento dei dati.</div>`;
+      }
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      
+      return lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        let obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = values[index] || '';
+        });
+        return obj;
+      });
+    }
+
+    function filterDay(dayName, btnElement) {
+      if (btnElement) {
+        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+      }
+
+      const container = document.getElementById('workout-container');
+      container.innerHTML = '';
+
+      const filtered = allExercises.filter(ex => ex.giorno && ex.giorno.toLowerCase() === dayName.toLowerCase());
+
+      if (filtered.length === 0 && allExercises.length > 0) {
+        container.innerHTML = `<div id="loading">Nessun esercizio presente per ${dayName}.</div>`;
+        return;
+      }
+
+      filtered.forEach(ex => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-header">
+            <h2 class="exercise-title">${ex.esercizio || 'Esercizio'}</h2>
+            <span class="muscle-badge">${ex.gruppo || 'General'}</span>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value">${ex.serie || '-'}</span>
+              <span class="stat-label">Serie</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">${ex.reps || '-'}</span>
+              <span class="stat-label">Reps</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">${ex.rest || '-'}</span>
+              <span class="stat-label">Rest</span>
+            </div>
+          </div>
+          ${ex.note ? `<div class="notes">${ex.note}</div>` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    loadSheetData();
+  </script>
 </body>
 </html>
