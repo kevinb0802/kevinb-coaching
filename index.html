@@ -5,18 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PT Kevin Beraldo</title>
 
-  <!-- Icona per iOS (iPhone/iPad) -->
   <link rel="apple-touch-icon" sizes="180x180" href="kevinlogo.jpg">
-  
-  <!-- Icone per Android / Samsung / Chrome -->
   <link rel="icon" type="image/jpeg" sizes="192x192" href="kevinlogo.jpg">
-  <link rel="shortcut icon" href="kevinlogo.jpg">
-
-  <!-- Configurazione PWA per iOS & Android -->
+  
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PT Kevin Beraldo">
-  <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0d1117">
 
   <style>
@@ -31,10 +24,7 @@
       --input-bg: #0d1117;
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -48,199 +38,72 @@
       min-height: 100vh;
     }
 
-    .container {
-      width: 100%;
-      max-width: 480px;
-    }
+    .container { width: 100%; max-width: 480px; }
 
-    /* Logo & Header */
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-      margin-top: 10px;
-    }
+    .header { text-align: center; margin-bottom: 20px; margin-top: 10px; }
 
     .logo {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      margin-bottom: 12px;
-      border-radius: 16px;
-      filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.25));
+      width: 90px; height: 90px; object-fit: contain; margin-bottom: 12px;
+      border-radius: 16px; filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.25));
     }
 
-    .brand-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text);
-      margin: 0;
-    }
+    .brand-title { font-size: 1.25rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin: 0; }
+    .brand-subtitle { font-size: 0.85rem; color: var(--accent-light); letter-spacing: 2px; margin-top: 4px; text-transform: uppercase; }
 
-    .brand-subtitle {
-      font-size: 0.85rem;
-      color: var(--accent-light);
-      letter-spacing: 2px;
-      margin-top: 4px;
-      text-transform: uppercase;
-    }
-
-    /* Pulsanti selezione giorno */
     .day-selector {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      padding-bottom: 4px;
+      display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px;
     }
 
     .day-btn {
-      flex: 1;
-      background-color: var(--card-bg);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      text-align: center;
-      white-space: nowrap;
-      transition: all 0.2s ease;
+      flex: 1; background-color: var(--card-bg); border: 1px solid var(--border);
+      color: var(--text-muted); padding: 10px 14px; border-radius: 12px;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; text-align: center;
+      white-space: nowrap; transition: all 0.2s ease;
     }
 
     .day-btn.active {
-      background-color: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
+      background-color: var(--accent); color: #fff; border-color: var(--accent);
       box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);
     }
 
-    /* Card Esercizio */
     .card {
-      background-color: var(--card-bg);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      background-color: var(--card-bg); border-radius: 16px; padding: 18px;
+      margin-bottom: 16px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .exercise-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text);
-      margin: 0;
-    }
-
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .exercise-title { font-size: 1.1rem; font-weight: 600; margin: 0; }
     .muscle-badge {
-      background-color: rgba(37, 99, 235, 0.15);
-      color: var(--accent-light);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
+      background-color: rgba(37, 99, 235, 0.15); color: var(--accent-light);
+      padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
     }
 
     .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+      background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: 10px; text-align: center;
     }
-
-    .stat-item {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-value {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--accent-light);
-    }
-
-    .stat-label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
+    .stat-item { display: flex; flex-direction: column; }
+    .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--accent-light); }
+    .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
 
     .notes {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 10px;
-      line-height: 1.4;
-      font-style: italic;
+      font-size: 0.85rem; color: var(--text-muted); margin-top: 10px; line-height: 1.4; font-style: italic;
     }
 
-    /* Sezione Tracciamento Cliente */
     .client-inputs {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px dashed var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);
+      display: flex; flex-direction: column; gap: 8px;
     }
-
-    .client-input-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .client-field {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .client-field label {
-      font-size: 0.68rem;
-      color: var(--accent-light);
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
+    .client-input-row { display: flex; gap: 8px; }
+    .client-field { flex: 1; display: flex; flex-direction: column; }
+    .client-field label { font-size: 0.68rem; color: var(--accent-light); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
     .client-field input, .client-field textarea {
-      background-color: var(--input-bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      outline: none;
+      background-color: var(--input-bg); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 10px; border-radius: 8px; font-size: 0.85rem; outline: none;
     }
+    .client-field textarea { resize: vertical; min-height: 38px; font-family: inherit; }
 
-    .client-field input:focus, .client-field textarea:focus {
-      border-color: var(--accent-light);
-    }
-
-    .client-field textarea {
-      resize: vertical;
-      min-height: 38px;
-      font-family: inherit;
-    }
-
-    #loading {
-      text-align: center;
-      color: var(--text-muted);
-      margin-top: 20px;
-    }
+    #loading { text-align: center; color: var(--text-muted); margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -252,51 +115,49 @@
       <div class="brand-subtitle">Personal Trainer</div>
     </div>
 
-    <!-- Selettore Giorni -->
-    <div class="day-selector">
-      <button class="day-btn active" onclick="filterDay('Giorno A', this)">Giorno A</button>
-      <button class="day-btn" onclick="filterDay('Giorno B', this)">Giorno B</button>
-      <button class="day-btn" onclick="filterDay('Giorno C', this)">Giorno C</button>
-      <button class="day-btn" onclick="filterDay('Giorno D', this)">Giorno D</button>
-    </div>
+    <!-- Pulsanti dei giorni dinamici -->
+    <div class="day-selector" id="day-buttons-container"></div>
 
-    <!-- Contenitore Esercizi -->
     <div id="workout-container">
       <div id="loading">Caricamento scheda...</div>
     </div>
   </div>
 
   <script>
-    // Mappa dei link CSV dei vari clienti
-    // Puoi aggiungere nuovi clienti incollando il loro link CSV di Google Sheets qui sotto:
-    const CLIENT_SHEETS = {
-      'default': 'INSERISCI_QUI_IL_LINK_CSV_DEFAULT',
-      'mario': 'INSERISCI_QUI_IL_LINK_CSV_MARIO',
-      'luca': 'INSERISCI_QUI_IL_LINK_CSV_LUCA'
-    };
+    // INSERISCI QUI IL LINK CSV DEL TUO FOGLIO GOOGLE PUBBLICATO SUL WEB
+    const MASTER_CSV_URL = 'INSERISCI_QUI_IL_LINK_CSV_DEL_FOGLIO';
 
-    // Estrae l'ID cliente dall'URL (es. ?id=mario)
     const urlParams = new URLSearchParams(window.location.search);
-    const clientId = urlParams.get('id') || 'default';
-    const SHEET_CSV_URL = CLIENT_SHEETS[clientId] || CLIENT_SHEETS['default'];
+    // Prende il nome del cliente dall'URL (es. ?id=amore oppure ?id=nada) trasformandolo in maiuscolo per coincidere con il foglio
+    const currentClient = (urlParams.get('id') || 'amore').trim().toUpperCase();
 
     let allExercises = [];
+    let availableDays = [];
+    let activeDay = '';
 
     async function loadSheetData() {
-      if (!SHEET_CSV_URL || SHEET_CSV_URL.startsWith('INSERISCI_QUI')) {
-        // Anteprima statica finché non colleghi il Google Sheet
-        allExercises = [
-          { giorno: 'Giorno A', esercizio: 'Panca Piana Bilanciere', gruppo: 'Petto', serie: '4', reps: '8', rest: '90"', note: 'Fermo al petto di 1 secondo. Esecuzione controllata nella fase eccentrica.' }
-        ];
-        filterDay('Giorno A');
+      if (MASTER_CSV_URL.startsWith('INSERISCI_QUI')) {
+        document.getElementById('workout-container').innerHTML = `<div id="loading">Incolla il link CSV del foglio Google nel codice.</div>`;
         return;
       }
 
       try {
-        const response = await fetch(SHEET_CSV_URL);
+        const response = await fetch(MASTER_CSV_URL);
         const csvText = await response.text();
-        allExercises = parseCSV(csvText);
-        filterDay('Giorno A');
+        const rows = parseCSV(csvText);
+
+        // Filtra in base alla colonna "Cliente" confrontandola con l'ID nell'URL
+        allExercises = rows.filter(r => r.cliente && r.cliente.trim().toUpperCase() === currentClient);
+
+        // Estrae i giorni unici presenti per questo cliente
+        availableDays = [...new Set(allExercises.map(r => r.giorno))].filter(Boolean);
+
+        buildDayButtons();
+        if (availableDays.length > 0) {
+          selectDay(availableDays[0]);
+        } else {
+          document.getElementById('workout-container').innerHTML = `<div id="loading">Nessun esercizio trovato per questo cliente.</div>`;
+        }
       } catch (error) {
         document.getElementById('workout-container').innerHTML = `<div id="loading">Errore nel caricamento della scheda.</div>`;
       }
@@ -304,6 +165,7 @@
 
     function parseCSV(text) {
       const lines = text.trim().split('\n');
+      // Legge le intestazioni esatte dal foglio
       const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
       
       return lines.slice(1).map(line => {
@@ -316,24 +178,33 @@
       });
     }
 
-    function filterDay(dayName, btnElement) {
+    function buildDayButtons() {
+      const btnContainer = document.getElementById('day-buttons-container');
+      btnContainer.innerHTML = '';
+
+      availableDays.forEach((day, index) => {
+        const btn = document.createElement('button');
+        btn.className = `day-btn ${index === 0 ? 'active' : ''}`;
+        btn.textContent = day;
+        btn.onclick = () => selectDay(day, btn);
+        btnContainer.appendChild(btn);
+      });
+    }
+
+    function selectDay(dayName, btnElement) {
       if (btnElement) {
         document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
         btnElement.classList.add('active');
       }
 
+      activeDay = dayName;
       const container = document.getElementById('workout-container');
       container.innerHTML = '';
 
-      const filtered = allExercises.filter(ex => ex.giorno && ex.giorno.toLowerCase() === dayName.toLowerCase());
-
-      if (filtered.length === 0 && allExercises.length > 0) {
-        container.innerHTML = `<div id="loading">Nessun esercizio presente per ${dayName}.</div>`;
-        return;
-      }
+      const filtered = allExercises.filter(ex => ex.giorno && ex.giorno.trim().toLowerCase() === dayName.trim().toLowerCase());
 
       filtered.forEach((ex, idx) => {
-        const exerciseKey = `saved_${clientId}_${dayName}_${ex.esercizio || idx}`.replace(/\s+/g, '_');
+        const exerciseKey = `saved_${currentClient}_${dayName}_${ex.esercizio || idx}`.replace(/\s+/g, '_');
         const savedData = JSON.parse(localStorage.getItem(exerciseKey) || '{}');
 
         const card = document.createElement('div');
@@ -341,40 +212,29 @@
         card.innerHTML = `
           <div class="card-header">
             <h2 class="exercise-title">${ex.esercizio || 'Esercizio'}</h2>
-            <span class="muscle-badge">${ex.gruppo || 'General'}</span>
+            <span class="muscle-badge">${ex['gruppi muscolari'] || 'Generale'}</span>
           </div>
           <div class="stats-grid">
-            <div class="stat-item">
-              <span class="stat-value">${ex.serie || '-'}</span>
-              <span class="stat-label">Serie</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">${ex.reps || '-'}</span>
-              <span class="stat-label">Reps</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">${ex.rest || '-'}</span>
-              <span class="stat-label">Rest</span>
-            </div>
+            <div class="stat-item"><span class="stat-value">${ex.serie || '-'}</span><span class="stat-label">Serie</span></div>
+            <div class="stat-item"><span class="stat-value">${ex.ripetizioni || '-'}</span><span class="stat-label">Reps</span></div>
+            <div class="stat-item"><span class="stat-value">${ex.recupero || '-'}</span><span class="stat-label">Rest</span></div>
           </div>
-          ${ex.note ? `<div class="notes">${ex.note}</div>` : ''}
+          ${ex['note tecniche'] ? `<div class="notes">${ex['note tecniche']}</div>` : ''}
 
-          <!-- Spazio riservato alla compilazione del cliente -->
           <div class="client-inputs">
             <div class="client-input-row">
               <div class="client-field">
                 <label>Kg Usati</label>
-                <input type="text" placeholder="es. 70kg" value="${savedData.kg || ''}" oninput="saveClientData('${exerciseKey}', 'kg', this.value)">
+                <input type="text" placeholder="es. 70kg" value="${savedData.kg || ''}" oninput="saveData('${exerciseKey}', 'kg', this.value)">
               </div>
               <div class="client-field">
                 <label>Reps Fatte</label>
-                <input type="text" placeholder="es. 8/8/7/6" value="${savedData.reps || ''}" oninput="saveClientData('${exerciseKey}', 'reps', this.value)">
+                <input type="text" placeholder="es. 8/8/7/6" value="${savedData.reps || ''}" oninput="saveData('${exerciseKey}', 'reps', this.value)">
               </div>
             </div>
             <div class="client-field">
               <label>Note Cliente</label>
-
-              <textarea placeholder="es. Sentito leggero, aumento la prossima volta" oninput="saveClientData('${exerciseKey}', 'notes', this.value)">${savedData.notes || ''}</textarea>
+              <textarea placeholder="Sensazioni sull'esercizio..." oninput="saveData('${exerciseKey}', 'notes', this.value)">${savedData.notes || ''}</textarea>
             </div>
           </div>
         `;
@@ -382,10 +242,9 @@
       });
     }
 
-    function saveClientData(key, field, value) {
+    function saveData(key, field, value) {
       const current = JSON.parse(localStorage.getItem(key) || '{}');
       current[field] = value;
-      localStorage.getItem(key);
       localStorage.setItem(key, JSON.stringify(current));
     }
 
