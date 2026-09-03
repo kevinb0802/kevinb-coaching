@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coaching App</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #38bdf8;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 16px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+      margin: 0 0 8px 0;
+      color: var(--accent);
+    }
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .meta-group {
+      display: flex;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .data-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.85rem;
+    }
+    .data-label {
+      color: var(--text-muted);
+    }
+    .note-box {
+      background: rgba(255,255,255,0.05);
+      border-left: 3px solid var(--accent);
+      padding: 8px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      border-radius: 0 4px 4px 0;
+    }
+    #loader {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Scheda Allenamento</h1>
+    <div id="user-info">Caricamento dati...</div>
+  </div>
+
+  <div id="workout-container">
+    <div id="loader">Caricamento in corso...</div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwRbXk4nFHL2bLM88Z4aLye9wr0-ClLDgaaIeIt555ZatGz0_Tqcyos8v2Zu4Ipk6Uv5g/exec";
+
+    async function loadWorkoutData() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        
+        const container = document.getElementById('workout-container');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+          container.innerHTML = '<p style="text-align:center;">Nessun dato trovato.</p>';
+          return;
+        }
+
+        document.getElementById('user-info').innerText = `Cliente: ${data[0].cliente} | ${data[0].giorno}`;
+
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          
+          card.innerHTML = `
+            <div class="card-title">${item.esercizio}</div>
+            <div class="meta-group">
+              <span><b>Serie x Rep:</b> ${item.serieRep}</span>
+              <span><b>Recupero:</b> ${item.recupero}"</span>
+            </div>
+            
+            <div class="data-row">
+              <div><span class="data-label">Intensità (RIR/RPE):</span><br>${item.intensita || '-'}</div>
+              <div><span class="data-label">Kg Usati:</span><br>${item.kgUsati || '-'}</div>
+            </div>
+
+            <div class="data-row">
+              <div><span class="data-label">Rep Effettive:</span><br>${item.repEffettive || '-'}</div>
+            </div>
+
+            ${item.noteTecniche ? `<div class="note-box"><b>Note Tecniche:</b> ${item.noteTecniche}</div>` : ''}
+            ${item.noteCliente ? `<div class="note-box" style="border-color: #f59e0b;"><b>Note Cliente:</b> ${item.noteCliente}</div>` : ''}
+          `;
+          
+          container.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error("Errore nel caricamento dei dati:", error);
+        document.getElementById('workout-container').innerHTML = '<p style="text-align:center; color:#ef4444;">Errore di caricamento dati dall\'API.</p>';
+      }
+    }
+
+    loadWorkoutData();
+  </script>
+</body>
+</html>
