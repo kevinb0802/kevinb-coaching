@@ -69,35 +69,43 @@
         .exercise-title {
             font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
             color: var(--text-primary);
         }
 
-        .set-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+        .exercise-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
         }
 
-        .set-info {
-            font-size: 0.95rem;
+        .set-row {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .set-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
             color: var(--text-secondary);
         }
 
-        .input-group {
-            display: flex;
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
+            margin-bottom: 8px;
         }
 
         .input-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
         }
 
         .input-wrapper label {
@@ -106,15 +114,20 @@
             margin-bottom: 2px;
         }
 
-        input[type="number"] {
+        input[type="number"], input[type="text"] {
             background: var(--bg-color);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 6px 8px;
+            padding: 8px;
             border-radius: 6px;
-            width: 65px;
+            width: 100%;
             text-align: center;
             font-size: 1rem;
+        }
+
+        input[type="text"] {
+            text-align: left;
+            font-size: 0.9rem;
         }
 
         input:focus {
@@ -155,67 +168,129 @@
     </header>
 
     <div id="app">
-        <div id="loading">Caricamento scheda...</div>
+        <div id="loading">Connessione al database in corso...</div>
     </div>
 
     <script>
-        // Dati statici di emergenza (funzionanti al 100%)
-        const staticData = [
-            { cliente: "AMORE", esercizio: "Panca Piana", set: 1, reps: "10", targetKg: 70 },
-            { cliente: "AMORE", esercizio: "Panca Piana", set: 2, reps: "8", targetKg: 75 },
-            { cliente: "AMORE", esercizio: "Panca Piana", set: 3, reps: "6", targetKg: 80 },
-            { cliente: "AMORE", esercizio: "Squat", set: 1, reps: "10", targetKg: 90 },
-            { cliente: "AMORE", esercizio: "Squat", set: 2, reps: "8", targetKg: 100 }
-        ];
+        // INCOLLA QUI L'URL DELLA TUA WEB APP DI GOOGLE APPS SCRIPT
+        const API_URL = 'https://script.google.com/macros/s/AKfycbz9S8qlsZ210ifoD_tCyfaEaHEMQ1iTm8eVOf5vqFzgjgcPp-x2MRFvw_MZ1oWr_W_A/exec';
 
-        function initApp() {
+        async function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
-            const clientQuery = urlParams.get('id') || urlParams.get('cliente') || 'Mario Rossi';
+            const clientQuery = urlParams.get('id') || urlParams.get('cliente') || '';
             
-            document.getElementById('client-name').innerText = clientQuery;
-
-            // Filtra i dati per il cliente
-            const clientData = staticData.filter(row => row.cliente.toLowerCase() === clientQuery.toLowerCase());
-
-            const appDiv = document.getElementById('app');
-            if (clientData.length === 0) {
-                appDiv.innerHTML = '<div class="card" style="text-align:center;">Nessuna scheda trovata per questo utente.</div>';
+            if (!clientQuery) {
+                document.getElementById('client-name').innerText = "Errore";
+                document.getElementById('app').innerHTML = '<div class="card" style="text-align:center;">Nessun utente specificato nell\'URL (es. ?id=Amore).</div>';
                 return;
             }
 
-            // Raggruppa per esercizio
-            const exercises = {};
-            clientData.forEach(row => {
-                if (!exercises[row.esercizio]) exercises[row.esercizio] = [];
-                exercises[row.esercizio].push(row);
-            });
+            document.getElementById('client-name').innerText = clientQuery.charAt(0).toUpperCase() + clientQuery.slice(1);
 
-            let html = '';
-            for (let exName in exercises) {
-                html += `<div class="card">
-                    <div class="exercise-title">${exName}</div>`;
-                
-                exercises[exName].forEach((item, index) => {
-                    html += `
-                        <div class="set-row">
-                            <span class="set-info">Set ${item.set} — ${item.reps} reps</span>
-                            <div class="input-group">
-                                <div class="input-wrapper">
-                                    <label>KG</label>
-                                    <input type="number" value="${item.targetKg}" data-ex="${exName}" data-set="${item.set}">
-                                </div>
-                            </div>
-                        </div>`;
+            try {
+                const response = await fetch(`${API_URL}?id=${encodeURIComponent(clientQuery)}`);
+                const clientData = await response.json();
+
+                const appDiv = document.getElementById('app');
+                if (!clientData || clientData.length === 0) {
+                    appDiv.innerHTML = '<div class="card" style="text-align:center;">Nessuna scheda trovata per questo utente.</div>';
+                    return;
+                }
+
+                const exercises = {};
+                clientData.forEach(row => {
+                    let exName = row.esercizio || 'Esercizio';
+                    if (!exercises[exName]) exercises[exName] = [];
+                    exercises[exName].push(row);
                 });
-                html += `</div>`;
-            }
 
-            html += `<button class="btn-save" onclick="saveData()">Salva Modifiche</button>`;
-            appDiv.innerHTML = html;
+                let html = '';
+                for (let exName in exercises) {
+                    let firstRow = exercises[exName][0];
+                    let noteTech = firstRow['note tecniche'] || '';
+                    
+                    html += `<div class="card">
+                        <div class="exercise-title">${exName}</div>`;
+                    if (noteTech) {
+                        html += `<div class="exercise-subtitle">Note: ${noteTech}</div>`;
+                    }
+                    
+                    exercises[exName].forEach((item) => {
+                        let numeroSerie = item.serie !== undefined ? item.serie : '-';
+                        let targetReps = item.ripetizioni !== undefined ? item.ripetizioni : '-';
+                        let caricoKg = item.kg !== undefined && item.kg !== null ? item.kg : '';
+                        let repsEffettuate = item['ripetizioni effettuate'] !== undefined && item['ripetizioni effettuate'] !== null ? item['ripetizioni effettuate'] : '';
+                        let noteCliente = item['note cliente'] !== undefined && item['note cliente'] !== null ? item['note cliente'] : '';
+
+                        html += `
+                            <div class="set-row">
+                                <div class="set-header">
+                                    <span>Set ${numeroSerie}</span>
+                                    <span>Target: ${targetReps} reps</span>
+                                </div>
+                                <div class="inputs-grid">
+                                    <div class="input-wrapper">
+                                        <label>KG Usati</label>
+                                        <input type="number" value="${caricoKg}" data-ex="${exName}" data-set="${numeroSerie}" class="input-kg" placeholder="0">
+                                    </div>
+                                    <div class="input-wrapper">
+                                        <label>Reps Fatte</label>
+                                        <input type="number" value="${repsEffettuate}" data-ex="${exName}" data-set="${numeroSerie}" class="input-reps" placeholder="-">
+                                    </div>
+                                </div>
+                                <div class="input-wrapper" style="margin-top: 6px;">
+                                    <label>Note Cliente</label>
+                                    <input type="text" value="${noteCliente}" data-ex="${exName}" data-set="${numeroSerie}" class="input-note" placeholder="Es. Facile, un po' di fastidio...">
+                                </div>
+                            </div>`;
+                    });
+                    html += `</div>`;
+                }
+
+                html += `<button class="btn-save" onclick="saveData('${clientQuery}')">Salva Modifiche</button>`;
+                appDiv.innerHTML = html;
+
+            } catch (error) {
+                document.getElementById('app').innerHTML = '<div class="card" style="text-align:center; color: var(--danger);">Errore di connessione al database. Riprova più tardi.</div>';
+            }
         }
 
-        function saveData() {
-            alert("Modifiche salvate con successo in locale!");
+        async function saveData(clientName) {
+            const setRows = document.querySelectorAll('.set-row');
+            let updatedData = [];
+
+            setRows.forEach(row => {
+                const kgInput = row.querySelector('.input-kg');
+                const repsInput = row.querySelector('.input-reps');
+                const noteInput = row.querySelector('.input-note');
+
+                updatedData.push({
+                    cliente: clientName,
+                    esercizio: kgInput.getAttribute('data-ex'),
+                    set: kgInput.getAttribute('data-set'),
+                    kg: kgInput.value,
+                    repsEffettuate: repsInput.value,
+                    noteCliente: noteInput.value
+                });
+            });
+
+            const btn = document.querySelector('.btn-save');
+            btn.innerText = "Salvataggio in corso...";
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                });
+
+                alert("Modifiche salvate e inviate al coach con successo!");
+            } catch (err) {
+                alert("Errore durante il salvataggio.");
+            } finally {
+                btn.innerText = "Salva Modifiche";
+            }
         }
 
         window.onload = initApp;
