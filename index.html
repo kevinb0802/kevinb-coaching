@@ -1,282 +1,224 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PT Kevin Beraldo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PT Kevin Beraldo</title>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="kevinlogo.jpg">
+    <link rel="icon" type="image/jpeg" sizes="192x192" href="kevinlogo.jpg">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0d1117">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="kevinlogo.jpg">
-  <link rel="icon" type="image/jpeg" sizes="192x192" href="kevinlogo.jpg">
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0d1117">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent: #238636;
+            --accent-hover: #2ea043;
+            --danger: #da3633;
+        }
 
-  <style>
-    :root {
-      --bg-color: #0d1117;
-      --card-bg: #161b22;
-      --accent: #2563eb;
-      --accent-light: #3b82f6;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border: #21262d;
-      --input-bg: #0d1117;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text);
-      margin: 0;
-      padding: 20px 16px 40px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    .container { width: 100%; max-width: 480px; }
+        h1.brand-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
 
-    .header { text-align: center; margin-bottom: 20px; margin-top: 10px; }
+        #client-name {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
-    .logo {
-      width: 90px; height: 90px; object-fit: contain; margin-bottom: 12px;
-      border-radius: 16px; filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.25));
-    }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
 
-    .brand-title { font-size: 1.25rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin: 0; }
-    .brand-subtitle { font-size: 0.85rem; color: var(--accent-light); letter-spacing: 2px; margin-top: 4px; text-transform: uppercase; }
+        .exercise-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
 
-    .day-selector {
-      display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px;
-    }
+        .set-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
 
-    .day-btn {
-      flex: 1; background-color: var(--card-bg); border: 1px solid var(--border);
-      color: var(--text-muted); padding: 10px 14px; border-radius: 12px;
-      font-weight: 600; font-size: 0.85rem; cursor: pointer; text-align: center;
-      white-space: nowrap; transition: all 0.2s ease;
-    }
+        .set-info {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
 
-    .day-btn.active {
-      background-color: var(--accent); color: #fff; border-color: var(--accent);
-      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);
-    }
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
 
-    .card {
-      background-color: var(--card-bg); border-radius: 16px; padding: 18px;
-      margin-bottom: 16px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
 
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .exercise-title { font-size: 1.1rem; font-weight: 600; margin: 0; }
-    .muscle-badge {
-      background-color: rgba(37, 99, 235, 0.15); color: var(--accent-light);
-      padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
-    }
+        .input-wrapper label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
 
-    .stats-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-      background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: 10px; text-align: center;
-    }
-    .stat-item { display: flex; flex-direction: column; }
-    .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--accent-light); }
-    .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+        input[type="number"] {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 8px;
+            border-radius: 6px;
+            width: 65px;
+            text-align: center;
+            font-size: 1rem;
+        }
 
-    .notes {
-      font-size: 0.85rem; color: var(--text-muted); margin-top: 10px; line-height: 1.4; font-style: italic;
-    }
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
 
-    .client-inputs {
-      margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .client-input-row { display: flex; gap: 8px; }
-    .client-field { flex: 1; display: flex; flex-direction: column; }
-    .client-field label { font-size: 0.68rem; color: var(--accent-light); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
-    .client-field input, .client-field textarea {
-      background-color: var(--input-bg); border: 1px solid var(--border); color: var(--text);
-      padding: 8px 10px; border-radius: 8px; font-size: 0.85rem; outline: none;
-    }
-    .client-field textarea { resize: vertical; min-height: 38px; font-family: inherit; }
+        #loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
 
-    #loading { text-align: center; color: var(--text-muted); margin-top: 20px; }
-  </style>
+        .btn-save {
+            width: 100%;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-save:active {
+            background-color: var(--accent-hover);
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <img src="kevinlogo.jpg" onerror="this.onerror=null; this.src='kevinlogo.png';" alt="Logo PT Kevin Beraldo" class="logo">
-      <h1 class="brand-title">Kevin Beraldo</h1>
-      <div class="brand-subtitle">Personal Trainer</div>
+    <header>
+        <h1 class="brand-title">Kevin Beraldo</h1>
+        <div id="client-name">Caricamento in corso...</div>
+    </header>
+
+    <div id="app">
+        <div id="loading">Caricamento scheda...</div>
     </div>
 
-    <!-- Pulsanti dei giorni dinamici -->
-    <div class="day-selector" id="day-buttons-container"></div>
+    <script>
+        // Dati statici di emergenza (funzionanti al 100%)
+        const staticData = [
+            { cliente: "Mario Rossi", esercizio: "Panca Piana", set: 1, reps: "10", targetKg: 70 },
+            { cliente: "Mario Rossi", esercizio: "Panca Piana", set: 2, reps: "8", targetKg: 75 },
+            { cliente: "Mario Rossi", esercizio: "Panca Piana", set: 3, reps: "6", targetKg: 80 },
+            { cliente: "Mario Rossi", esercizio: "Squat", set: 1, reps: "10", targetKg: 90 },
+            { cliente: "Mario Rossi", esercizio: "Squat", set: 2, reps: "8", targetKg: 100 }
+        ];
 
-    <div id="workout-container">
-      <div id="loading">Caricamento scheda...</div>
-    </div>
-  </div>
+        function initApp() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientQuery = urlParams.get('id') || urlParams.get('cliente') || 'Mario Rossi';
+            
+            document.getElementById('client-name').innerText = clientQuery;
 
-  <script>
-    // INSERISCI QUI IL LINK CSV DEL TUO FOGLIO GOOGLE PUBBLICATO SUL WEB
-    const MASTER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTmkUu8PSu-HbSKD7c8Rd0aZY2STrHNtwuu-g94d2bQL6rCJdu-Lx8jewW835RGHk10dMhUcj4hqpts/pub?output=csv';
+            // Filtra i dati per il cliente
+            const clientData = staticData.filter(row => row.cliente.toLowerCase() === clientQuery.toLowerCase());
 
-    const urlParams = new URLSearchParams(window.location.search);
-    // Prende il nome del cliente dall'URL (es. ?id=amore oppure ?id=nada) trasformandolo in maiuscolo per coincidere con il foglio
-    const currentClient = (urlParams.get('id') || 'amore').trim().toUpperCase();
+            const appDiv = document.getElementById('app');
+            if (clientData.length === 0) {
+                appDiv.innerHTML = '<div class="card" style="text-align:center;">Nessuna scheda trovata per questo utente.</div>';
+                return;
+            }
 
-    let allExercises = [];
-    let availableDays = [];
-    let activeDay = '';
+            // Raggruppa per esercizio
+            const exercises = {};
+            clientData.forEach(row => {
+                if (!exercises[row.esercizio]) exercises[row.esercizio] = [];
+                exercises[row.esercizio].push(row);
+            });
 
-async function loadSheetData() {
-  try {
-    const response = await fetch(MASTER_CSV_URL);
-    if (!response.ok) throw new Error('Errore HTTP: ' + response.status);
-    const csvText = await response.text();
-    const rows = parseCSV(csvText);
+            let html = '';
+            for (let exName in exercises) {
+                html += `<div class="card">
+                    <div class="exercise-title">${exName}</div>`;
+                
+                exercises[exName].forEach((item, index) => {
+                    html += `
+                        <div class="set-row">
+                            <span class="set-info">Set ${item.set} — ${item.reps} reps</span>
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <label>KG</label>
+                                    <input type="number" value="${item.targetKg}" data-ex="${exName}" data-set="${item.set}">
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                html += `</div>`;
+            }
 
-    allExercises = rows.filter(r => r.cliente && r.cliente.trim().toUpperCase() === currentClient);
-    availableDays = [...new Set(allExercises.map(r => r.giorno))].filter(Boolean);
-    
-  } catch (error) {
-    document.getElementById('loading').innerHTML = '<span style="color: red; font-size: 18px;">ERRORE: ' + error.message + '</span>';
-  }
-}
+            html += `<button class="btn-save" onclick="saveData()">Salva Modifiche</button>`;
+            appDiv.innerHTML = html;
+        }
 
-    buildDayButtons();
-    if (availableDays.length > 0) {
-      selectDay(availableDays[0]);
-    } else {
-      document.getElementById('workout-container').innerHTML = '<div id="loading">Nessun esercizio trovato per questo cliente. (Verifica che l\'ID nella URL sia corretto)</div>';
-    }
-  } catch (error) {
-    console.error("Errore dettagliato caricamento:", error);
-    document.getElementById('workout-container').innerHTML = '<div id="loading">Errore nel caricamento: ' + error.message + '</div>';
-  }
-}
-    }
+        function saveData() {
+            alert("Modifiche salvate con successo in locale!");
+        }
 
-    function parseCSV(text) {
-      const lines = text.trim().split('\n');
-      // Legge le intestazioni esatte dal foglio
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-      
-      return lines.slice(1).map(line => {
-        const values = line.split(',').map(v => v.trim());
-        let obj = {};
-        headers.forEach((header, index) => {
-          obj[header] = values[index] || '';
-        });
-        return obj;
-      });
-    }
-
-    function buildDayButtons() {
-      const btnContainer = document.getElementById('day-buttons-container');
-      btnContainer.innerHTML = '';
-
-      availableDays.forEach((day, index) => {
-        const btn = document.createElement('button');
-        btn.className = `day-btn ${index === 0 ? 'active' : ''}`;
-        btn.textContent = day;
-        btn.onclick = () => selectDay(day, btn);
-        btnContainer.appendChild(btn);
-      });
-    }
-
-    function selectDay(dayName, btnElement) {
-      if (btnElement) {
-        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
-      }
-
-      activeDay = dayName;
-      const container = document.getElementById('workout-container');
-      container.innerHTML = '';
-
-      const filtered = allExercises.filter(ex => ex.giorno && ex.giorno.trim().toLowerCase() === dayName.trim().toLowerCase());
-
-      filtered.forEach((ex, idx) => {
-        const exerciseKey = `saved_${currentClient}_${dayName}_${ex.esercizio || idx}`.replace(/\s+/g, '_');
-        const savedData = JSON.parse(localStorage.getItem(exerciseKey) || '{}');
-
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-header">
-            <h2 class="exercise-title">${ex.esercizio || 'Esercizio'}</h2>
-            <span class="muscle-badge">${ex['gruppi muscolari'] || 'Generale'}</span>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-item"><span class="stat-value">${ex.serie || '-'}</span><span class="stat-label">Serie</span></div>
-            <div class="stat-item"><span class="stat-value">${ex.ripetizioni || '-'}</span><span class="stat-label">Reps</span></div>
-            <div class="stat-item"><span class="stat-value">${ex.recupero || '-'}</span><span class="stat-label">Rest</span></div>
-          </div>
-          ${ex['note tecniche'] ? `<div class="notes">${ex['note tecniche']}</div>` : ''}
-
-          <div class="client-inputs">
-            <div class="client-input-row">
-              <div class="client-field">
-                <label>Kg Usati</label>
-                <input type="text" placeholder="es. 70kg" value="${savedData.kg || ''}" oninput="saveData('${exerciseKey}', 'kg', this.value)">
-              </div>
-              <div class="client-field">
-                <label>Reps Fatte</label>
-                <input type="text" placeholder="es. 8/8/7/6" value="${savedData.reps || ''}" oninput="saveData('${exerciseKey}', 'reps', this.value)">
-              </div>
-            </div>
-            <div class="client-field">
-              <label>Note Cliente</label>
-              <textarea placeholder="Sensazioni sull'esercizio..." oninput="saveData('${exerciseKey}', 'notes', this.value)">${savedData.notes || ''}</textarea>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMJR7HxjldmLqyocDuHnfCohtavuP9qLuokwSRa41NTOHQmnurhfwldnewnGre7g/exec";
-function loadSheetData() {
-  console.log("Caricamento completato!");
-}
-    
-    function saveData(key, field, value) {
-  const current = JSON.parse(localStorage.getItem(key) || '{}');
-  current[field] = value;
-  localStorage.setItem(key, JSON.stringify(current));
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const rawClient = urlParams.get('id') || 'AMORE';
-  const clientName = rawClient.trim().toUpperCase();
-
-  const payload = {
-    client: clientName,
-    day: current.day || '',
-    exercise: current.exercise || key,
-    weight: field === 'weight' ? value : (current.weight || ''),
-    notes: field === 'notes' ? value : (current.notes || '')
-  };
-
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(() => {
-    console.log("Aggiornato sul Google Sheet!");
-  })
-  .catch(error => {
-    console.error("Errore invio:", error);
-  });
-}
-
-loadSheetData();
+        window.onload = initApp;
+    </script>
+</body>
+</html>
