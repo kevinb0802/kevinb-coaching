@@ -1,295 +1,126 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scheda Allenamento - Kevin Beraldo</title>
-  <style>
-    :root {
-      --bg-color: #0f1115;
-      --card-bg: #181c24;
-      --accent-color: #3b82f6;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border-color: #2a313d;
-      --success-color: #10b981;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      margin: 0;
-      padding: 16px;
-      padding-bottom: 80px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    header h1 {
-      font-size: 1.5rem;
-      margin: 0;
-      color: var(--text-main);
-    }
-    header h2 {
-      font-size: 1.1rem;
-      margin: 4px 0 0 0;
-      color: var(--accent-color);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .loading, .error {
-      text-align: center;
-      padding: 40px;
-      font-size: 1.1rem;
-      color: var(--text-muted);
-    }
-    .error { color: #ef4444; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheda Allenamento - Kevin Beraldo</title>
     
-    .exercise-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    .exercise-title {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin: 0 0 4px 0;
-    }
-    .exercise-notes {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-    
-    .set-row {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-    .set-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: var(--accent-color);
-    }
-    .inputs-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .input-group label {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 3px;
-    }
-    .input-group input, .input-group textarea {
-      width: 100%;
-      background: #111318;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-main);
-      padding: 8px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    .full-width {
-      grid-column: span 2;
-    }
-    
-    .save-container {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(15, 17, 21, 0.95);
-      backdrop-filter: blur(8px);
-      border-top: 1px solid var(--border-color);
-      padding: 12px 16px;
-      text-align: center;
-      z-index: 100;
-    }
-    .save-btn {
-      background-color: var(--success-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      width: 100%;
-      max-width: 500px;
-      padding: 14px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .save-btn:active {
-      opacity: 0.8;
-    }
-  </style>
+    <!-- TAG AGGIUNTI PER IL LOGO -->
+    <link rel="apple-touch-icon" href="kevinlogo.jpg">
+    <link rel="icon" type="image/jpeg" href="kevinlogo.jpg">
+
+    <!-- Tailwind CSS (Identico a prima) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import "tailwindcss";
+    </style>
 </head>
-<body>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col font-sans">
 
-  <header>
-    <h1>Kevin Beraldo</h1>
-    <h2 id="client-title">Caricamento...</h2>
-  </header>
-
-  <div id="app" class="loading">Caricamento scheda in corso...</div>
-
-  <div class="save-container" id="save-bar" style="display: none;">
-    <button class="save-btn" onclick="salvaModifiche()">Salva Modifiche</button>
-  </div>
-
-  <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwt4EJ6y2EKxTH41m77Ng0kGDQTbbF8Rcl81rmHutHqS9laEPn-QmncUPFzflTfQKJX/exec";
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const clientId = urlParams.get('id');
-
-    if (!clientId) {
-      document.getElementById('app').innerHTML = '<div class="error">Nessun utente specificato nell\'URL (es. ?id=Amore)</div>';
-      document.getElementById('client-title').innerText = "Errore";
-    } else {
-      document.getElementById('client-title').innerText = clientId;
-      caricaScheda();
-    }
-
-    let rawDataCache = [];
-
-    function caricaScheda() {
-      fetch(`${WEB_APP_URL}?id=${encodeURIComponent(clientId)}`)
-        .then(response => response.json())
-        .then(data => {
-          if (!data || data.length === 0) {
-            document.getElementById('app').innerHTML = '<div class="error">Nessuna scheda trovata per questo utente.</div>';
-            return;
-          }
-          rawDataCache = data;
-          renderApp(data);
-          document.getElementById('save-bar').style.display = 'block';
-        })
-        .catch(error => {
-          console.error("Errore:", error);
-          document.getElementById('app').innerHTML = '<div class="error">Errore di connessione al database.</div>';
-        });
-    }
-
-    function renderApp(data) {
-      const app = document.getElementById('app');
-      app.className = "";
-      app.innerHTML = "";
-
-      // Raggruppa per esercizio
-      const exercises = {};
-      data.forEach(row => {
-        const esName = row.esercizio || "Esercizio senza nome";
-        if (!exercises[esName]) {
-          exercises[esName] = {
-            noteTecniche: row["note tecniche"] || "",
-            sets: []
-          };
-        }
-        exercises[esName].sets.push(row);
-      });
-
-      for (let [esName, details] of Object.entries(exercises)) {
-        let card = document.createElement('div');
-        card.className = 'exercise-card';
-        
-        let html = `
-          <div class="exercise-title">${esName}</div>
-          <div class="exercise-notes">Note: ${details.noteTecniche}</div>
-        `;
-
-        details.sets.forEach((setRow, index) => {
-          const setNum = setRow.serie || (index + 1);
-          const targetReps = setRow.ripetizioni || "-";
-          const savedKg = setRow.kg !== undefined && setRow.kg !== null ? setRow.kg : "";
-          const savedReps = setRow["ripetizioni effettuate"] !== undefined && setRow["ripetizioni effettuate"] !== null ? setRow["ripetizioni effettuate"] : "";
-          const savedNote = setRow["note cliente"] !== undefined && setRow["note cliente"] !== null ? setRow["note cliente"] : "";
-
-          html += `
-            <div class="set-row" data-esercizio="${esName}" data-set="${setNum}">
-              <div class="set-header">
-                <span>Set ${setNum}</span>
-                <span>Target: ${targetReps} reps</span>
-              </div>
-              <div class="inputs-grid">
-                <div class="input-group">
-                  <label>KG Usati</label>
-                  <input type="number" step="0.5" class="input-kg" value="${savedKg}" placeholder="0">
-                </div>
-                <div class="input-group">
-                  <label>Reps Fatte</label>
-                  <input type="text" class="input-reps" value="${savedReps}" placeholder="-">
-                </div>
-                <div class="input-group full-width">
-                  <label>Note Cliente</label>
-                  <textarea class="input-note" rows="1" placeholder="Es. Facile, un po' di fastidio...">${savedNote}</textarea>
-                </div>
-              </div>
+    <!-- Header con il tuo logo KB -->
+    <header class="bg-gray-900 border-b border-gray-800 p-4 sticky top-0 z-50 flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-3">
+            <img src="kevinlogo.jpg" alt="Logo KB" class="w-10 h-10 rounded-full object-cover border border-gray-700 shadow">
+            <div>
+                <h1 id="client-title" class="font-bold text-lg tracking-wide text-white">Caricamento Scheda...</h1>
+                <p class="text-xs text-gray-400">PT Kevin Beraldo</p>
             </div>
-          `;
-        });
+        </div>
+        <div id="client-badge" class="hidden px-3 py-1 bg-blue-600/20 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-full">
+            Attivo
+        </div>
+    </header>
 
-        card.innerHTML = html;
-        app.appendChild(card);
-      }
-    }
+    <!-- Contenuto principale della scheda -->
+    <main class="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
+        <div id="loading" class="flex flex-col items-center justify-center py-20 space-y-3">
+            <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-gray-400 text-sm">Caricamento dati allenamento...</p>
+        </div>
 
-    function salvaModifiche() {
-      const rowsToUpdate = [];
-      const setRows = document.querySelectorAll('.set-row');
+        <div id="content" class="space-y-6"></div>
+    </main>
 
-      setRows.forEach(row => {
-        const esercizio = row.getAttribute('data-esercizio');
-        const setNum = row.getAttribute('data-set');
-        const kg = row.querySelector('.input-kg').value;
-        const repsEffettuate = row.querySelector('.input-reps').value;
-        const noteCliente = row.querySelector('.input-note').value;
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-4 text-center text-xs text-gray-500">
+        <p>© 2026 Kevin Beraldo Coaching. Tutti i diritti riservati.</p>
+    </footer>
 
-        rowsToUpdate.push({
-          cliente: clientId,
-          esercizio: esercizio,
-          set: setNum,
-          kg: kg,
-          repsEffettuate: repsEffettuate,
-          noteCliente: noteCliente
-        });
-      });
+    <!-- Script di logica identico a prima -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const cliente = urlParams.get('id');
 
-      const btn = document.querySelector('.save-btn');
-      btn.innerText = "Salvataggio in corso...";
+        if (!cliente) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('client-title').innerText = "Errore Accesso";
+            document.getElementById('content').innerHTML = `
+                <div class="bg-red-950/40 border border-red-800 p-6 rounded-xl text-center space-y-2">
+                    <p class="text-red-400 font-semibold">Nessun cliente specificato.</p>
+                    <p class="text-xs text-gray-400">Usa il link personale fornito dal tuo personal trainer.</p>
+                </div>
+            `;
+        } else {
+            document.getElementById('client-title').innerText = `Scheda di ${cliente.toUpperCase()}`;
 
-      fetch(WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
-        },
-        body: JSON.stringify(rowsToUpdate)
-      })
-      .then(() => {
-        btn.innerText = "Salvato con successo! ✓";
-        setTimeout(() => {
-          btn.innerText = "Salva Modifiche";
-        }, 2500);
-      })
-      .catch(error => {
-        console.error("Errore salvataggio:", error);
-        btn.innerText = "Errore nel salvataggio";
-        setTimeout(() => {
-          btn.innerText = "Salva Modifiche";
-        }, 2500);
-      });
-    }
-  </script>
+            // Inserisci qui il tuo link di Google Apps Script (lascialo esattamente come lo avevi tu)
+            const scriptURL = `https://script.google.com/macros/s/IL_TUO_SCRIPT_QUI/exec?id=${encodeURIComponent(cliente)}`;
+
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('client-badge').classList.remove('hidden');
+                    
+                    if (!data || data.length === 0) {
+                        document.getElementById('content').innerHTML = `
+                            <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl text-center">
+                                <p class="text-gray-400">Nessun esercizio trovato per questo profilo.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let htmlContent = '';
+                    data.forEach(item => {
+                        htmlContent += `
+                            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm space-y-3">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-base text-blue-400">${item.Esercizio || 'Esercizio'}</h3>
+                                    <span class="text-xs bg-gray-800 text-gray-300 px-2.5 py-1 rounded-md">${item.Gruppi_muscolari || ''}</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-sm bg-gray-950/60 p-3 rounded-lg border border-gray-800/60 text-center">
+                                    <div>
+                                        <span class="block text-[10px] uppercase text-gray-500 font-medium">Serie</span>
+                                        <span class="font-semibold text-gray-200">${item.Serie || '-'}</span>
+                                    </div>
+                                    <div>
+                                        <span class="block text-[10px] uppercase text-gray-500 font-medium">Ripetizioni</span>
+                                        <span class="font-semibold text-gray-200">${item.Ripetizioni || '-'}</span>
+                                    </div>
+                                    <div>
+                                        <span class="block text-[10px] uppercase text-gray-500 font-medium">Recupero</span>
+                                        <span class="font-semibold text-gray-200">${item.Recupero || '-'}</span>
+                                    </div>
+                                </div>
+                                ${item.Note_Tecniche ? `<p class="text-xs text-gray-400 italic bg-gray-950/30 p-2 rounded">Note: ${item.Note_Tecniche}</p>` : ''}
+                            </div>
+                        `;
+                    });
+
+                    document.getElementById('content').innerHTML = htmlContent;
+                })
+                .catch(error => {
+                    console.error('Errore:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('content').innerHTML = `
+                        <div class="bg-red-950/40 border border-red-800 p-6 rounded-xl text-center space-y-2">
+                            <p class="text-red-400 font-semibold">Errore di connessione al database.</p>
+                            <p class="text-xs text-gray-400">Riprova più tardi o contatta il supporto.</p>
+                        </div>
+                    `;
+                });
+        }
+    </script>
 </body>
 </html>
