@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scheda Allenamento - Kevin Beraldo</title>
     
-    <!-- TAG AGGIUNTI PER IL LOGO -->
+    <!-- Tag per il logo KB -->
     <link rel="apple-touch-icon" href="kevinlogo.jpg">
     <link rel="icon" type="image/jpeg" href="kevinlogo.jpg">
 
-    <!-- Tailwind CSS (Identico a prima) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import "tailwindcss";
@@ -31,7 +31,7 @@
         </div>
     </header>
 
-    <!-- Contenuto principale della scheda -->
+    <!-- Contenuto principale -->
     <main class="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
         <div id="loading" class="flex flex-col items-center justify-center py-20 space-y-3">
             <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -46,7 +46,7 @@
         <p>© 2026 Kevin Beraldo Coaching. Tutti i diritti riservati.</p>
     </footer>
 
-    <!-- Script di logica identico a prima -->
+    <!-- Script di logica -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const cliente = urlParams.get('id');
@@ -63,8 +63,7 @@
         } else {
             document.getElementById('client-title').innerText = `Scheda di ${cliente.toUpperCase()}`;
 
-            // Inserisci qui il tuo link di Google Apps Script (lascialo esattamente come lo avevi tu)
-            const scriptURL = `https://script.google.com/macros/s/IL_TUO_SCRIPT_QUI/exec?id=${encodeURIComponent(cliente)}`;
+            const scriptURL = `https://script.google.com/macros/s/AKfycbwt4EJ6y2EKxTH41m77Ng0kGDQTbbF8Rcl81rmHutHqS9laEPn-QmncUPFzflTfQKJX/exec?id=${encodeURIComponent(cliente)}`;
 
             fetch(scriptURL)
                 .then(response => response.json())
