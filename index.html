@@ -31,7 +31,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 16px;
     }
@@ -54,6 +54,33 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
+
+    /* Selettore dei Giorni */
+    .days-container {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      padding-bottom: 4px;
+    }
+    .day-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .day-btn.active {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+
     .loading, .error {
       text-align: center;
       padding: 40px;
@@ -160,6 +187,9 @@
     </div>
   </header>
 
+  <!-- Contenitore dei bottoni per cambiare giorno -->
+  <div id="days-nav" class="days-container" style="display: none;"></div>
+
   <div id="app" class="loading">Caricamento scheda in corso...</div>
 
   <div class="save-container" id="save-bar" style="display: none;">
@@ -173,7 +203,7 @@
     const clientId = urlParams.get('id');
 
     if (!clientId) {
-      document.getElementById('app').innerHTML = '<div class="error">Nessun utente specificato nell\'URL (es. ?id=Amore)</div>';
+      document.getElementById('app').innerHTML = '<div class="error">Nessun utente specificato nell\'URL (es. ?id=Loris)</div>';
       document.getElementById('client-title').innerText = "Errore";
     } else {
       document.getElementById('client-title').innerText = clientId;
@@ -181,6 +211,7 @@
     }
 
     let rawDataCache = [];
+    let currentDay = "";
 
     function caricaScheda() {
       fetch(`${WEB_APP_URL}?id=${encodeURIComponent(clientId)}`)
@@ -191,7 +222,16 @@
             return;
           }
           rawDataCache = data;
-          renderApp(data);
+          
+          // Estrai i giorni unici presenti nel foglio (es. "Giorno 1", "Giorno 2", ecc.)
+          const days = [...new Set(data.map(row => row.giorno || row.Giorno || "Allenamento").filter(Boolean))];
+          
+          if (days.length > 0) {
+            currentDay = days[0]; // Di default seleziona il primo giorno
+            renderDaysNav(days);
+          }
+
+          renderApp();
           document.getElementById('save-bar').style.display = 'block';
         })
         .catch(error => {
@@ -200,18 +240,48 @@
         });
     }
 
-    function renderApp(data) {
+    function renderDaysNav(days) {
+      const nav = document.getElementById('days-nav');
+      nav.style.display = 'flex';
+      nav.innerHTML = '';
+
+      days.forEach(day => {
+        const btn = document.createElement('button');
+        btn.className = `day-btn ${day === currentDay ? 'active' : ''}`;
+        btn.innerText = day;
+        btn.onclick = () => {
+          currentDay = day;
+          document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderApp();
+        };
+        nav.appendChild(btn);
+      });
+    }
+
+    function renderApp() {
       const app = document.getElementById('app');
       app.className = "";
       app.innerHTML = "";
 
+      // Filtra i dati solo per il giorno attualmente selezionato
+      const filteredData = rawDataCache.filter(row => {
+        const rowDay = row.giorno || row.Giorno || "Allenamento";
+        return rowDay === currentDay;
+      });
+
+      if (filteredData.length === 0) {
+        app.innerHTML = '<div class="error">Nessun esercizio trovato per questo giorno.</div>';
+        return;
+      }
+
       // Raggruppa per esercizio
       const exercises = {};
-      data.forEach(row => {
-        const esName = row.esercizio || "Esercizio senza nome";
+      filteredData.forEach(row => {
+        const esName = row.esercizio || row.Esercizio || "Esercizio senza nome";
         if (!exercises[esName]) {
           exercises[esName] = {
-            noteTecniche: row["note tecniche"] || "",
+            noteTecniche: row["note tecniche"] || row["Note Tecniche"] || "",
             sets: []
           };
         }
@@ -228,8 +298,8 @@
         `;
 
         details.sets.forEach((setRow, index) => {
-          const setNum = setRow.serie || (index + 1);
-          const targetReps = setRow.ripetizioni || "-";
+          const setNum = setRow.serie || setRow.Serie || (index + 1);
+          const targetReps = setRow.ripetizioni || setRow.Ripetizioni || "-";
           const savedKg = setRow.kg !== undefined && setRow.kg !== null ? setRow.kg : "";
           const savedReps = setRow["ripetizioni effettuate"] !== undefined && setRow["ripetizioni effettuate"] !== null ? setRow["ripetizioni effettuate"] : "";
           const savedNote = setRow["note cliente"] !== undefined && setRow["note cliente"] !== null ? setRow["note cliente"] : "";
@@ -276,6 +346,7 @@
 
         rowsToUpdate.push({
           cliente: clientId,
+          giorno: currentDay,
           esercizio: esercizio,
           set: setNum,
           kg: kg,
