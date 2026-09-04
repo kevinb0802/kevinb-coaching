@@ -135,15 +135,21 @@
     let availableDays = [];
     let activeDay = '';
 
-    async function loadSheetData() {
+async function loadSheetData() {
   try {
     const response = await fetch(MASTER_CSV_URL);
+    if (!response.ok) throw new Error('Errore HTTP: ' + response.status);
     const csvText = await response.text();
     const rows = parseCSV(csvText);
-    
+
     allExercises = rows.filter(r => r.cliente && r.cliente.trim().toUpperCase() === currentClient);
     availableDays = [...new Set(allExercises.map(r => r.giorno))].filter(Boolean);
     
+  } catch (error) {
+    document.getElementById('loading').innerHTML = '<span style="color: red; font-size: 18px;">ERRORE: ' + error.message + '</span>';
+  }
+}
+
     buildDayButtons();
     if (availableDays.length > 0) {
       selectDay(availableDays[0]);
