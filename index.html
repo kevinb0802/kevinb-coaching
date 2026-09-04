@@ -46,7 +46,7 @@
         <p>© 2026 Kevin Beraldo Coaching. Tutti i diritti riservati.</p>
     </footer>
 
-    <!-- Script di logica -->
+    <!-- Script di logica mappato sulle tue colonne reali -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const cliente = urlParams.get('id');
@@ -81,12 +81,21 @@
                     }
 
                     let htmlContent = '';
+                    let currentDay = '';
+
                     data.forEach(item => {
+                        // Se il giorno cambia, stampiamo un'intestazione del giorno (Colonna B)
+                        const giorno = item.Giorno || '';
+                        if (giorno !== currentDay) {
+                            currentDay = giorno;
+                            htmlContent += `<div class="pt-4 pb-2"><h2 class="text-xl font-extrabold text-blue-400 tracking-wide uppercase border-b border-gray-800 pb-2">${currentDay}</h2></div>`;
+                        }
+
                         htmlContent += `
                             <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm space-y-3">
                                 <div class="flex justify-between items-start">
-                                    <h3 class="font-bold text-base text-blue-400">${item.Esercizio || 'Esercizio'}</h3>
-                                    <span class="text-xs bg-gray-800 text-gray-300 px-2.5 py-1 rounded-md">${item.Gruppi_muscolari || ''}</span>
+                                    <h3 class="font-bold text-base text-white">${item.Esercizio || 'Esercizio'}</h3>
+                                    <span class="text-xs bg-gray-800 text-gray-300 px-2.5 py-1 rounded-md">${item.Gruppo_Muscolare || item.Gruppi_Muscolari || ''}</span>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 text-sm bg-gray-950/60 p-3 rounded-lg border border-gray-800/60 text-center">
                                     <div>
@@ -102,7 +111,7 @@
                                         <span class="font-semibold text-gray-200">${item.Recupero || '-'}</span>
                                     </div>
                                 </div>
-                                ${item.Note_Tecniche ? `<p class="text-xs text-gray-400 italic bg-gray-950/30 p-2 rounded">Note: ${item.Note_Tecniche}</p>` : ''}
+                                ${item.Note ? `<p class="text-xs text-gray-400 italic bg-gray-950/30 p-2 rounded">Note: ${item.Note}</p>` : ''}
                             </div>
                         `;
                     });
