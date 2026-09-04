@@ -1,299 +1,295 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PT Kevin Beraldo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheda Allenamento - Kevin Beraldo</title>
+  <style>
+    :root {
+      --bg-color: #0f1115;
+      --card-bg: #181c24;
+      --accent-color: #3b82f6;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: #2a313d;
+      --success-color: #10b981;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 16px;
+      padding-bottom: 80px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+      color: var(--text-main);
+    }
+    header h2 {
+      font-size: 1.1rem;
+      margin: 4px 0 0 0;
+      color: var(--accent-color);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .loading, .error {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+    .error { color: #ef4444; }
     
-    <link rel="apple-touch-icon" sizes="180x180" href="kevinlogo.jpg">
-    <link rel="icon" type="image/jpeg" sizes="192x192" href="kevinlogo.jpg">
+    .exercise-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .exercise-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0 0 4px 0;
+    }
+    .exercise-notes {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0d1117">
-
-    <style>
-        :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --border-color: #30363d;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --accent: #238636;
-            --accent-hover: #2ea043;
-            --danger: #da3633;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            padding: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-            padding-bottom: 50px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h1.brand-title {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        #client-name {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .exercise-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-
-        .exercise-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-        }
-
-        .set-row {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .set-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .inputs-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .input-wrapper {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .input-wrapper label {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-bottom: 2px;
-        }
-
-        input[type="number"], input[type="text"] {
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px;
-            border-radius: 6px;
-            width: 100%;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        input[type="text"] {
-            text-align: left;
-            font-size: 0.9rem;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        #loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-        }
-
-        .btn-save {
-            width: 100%;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-save:active {
-            background-color: var(--accent-hover);
-        }
-    </style>
+    .set-row {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .set-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: var(--accent-color);
+    }
+    .inputs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+    .input-group input, .input-group textarea {
+      width: 100%;
+      background: #111318;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      padding: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .full-width {
+      grid-column: span 2;
+    }
+    
+    .save-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 17, 21, 0.95);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 16px;
+      text-align: center;
+      z-index: 100;
+    }
+    .save-btn {
+      background-color: var(--success-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 500px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .save-btn:active {
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1 class="brand-title">Kevin Beraldo</h1>
-        <div id="client-name">Caricamento in corso...</div>
-    </header>
+  <header>
+    <h1>Kevin Beraldo</h1>
+    <h2 id="client-title">Caricamento...</h2>
+  </header>
 
-    <div id="app">
-        <div id="loading">Connessione al database in corso...</div>
-    </div>
+  <div id="app" class="loading">Caricamento scheda in corso...</div>
 
-    <script>
-        // URL AGGIORNATO DI GOOGLE APPS SCRIPT
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzdUYcnmM7EH6DLHxPJ2F1ULnm10T8RKxhtuAijtmO_8ZQGTD-Zodr-8sf-DQ4agt9z/exec';
+  <div class="save-container" id="save-bar" style="display: none;">
+    <button class="save-btn" onclick="salvaModifiche()">Salva Modifiche</button>
+  </div>
 
-        async function initApp() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const clientQuery = urlParams.get('id') || urlParams.get('cliente') || '';
-            
-            if (!clientQuery) {
-                document.getElementById('client-name').innerText = "Errore";
-                document.getElementById('app').innerHTML = '<div class="card" style="text-align:center;">Nessun utente specificato nell\'URL (es. ?id=Amore).</div>';
-                return;
-            }
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwt4EJ6y2EKxTH41m77Ng0kGDQTbbF8Rcl81rmHutHqS9laEPn-QmncUPFzflTfQKJX/exec";
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientId = urlParams.get('id');
 
-            document.getElementById('client-name').innerText = clientQuery.charAt(0).toUpperCase() + clientQuery.slice(1);
+    if (!clientId) {
+      document.getElementById('app').innerHTML = '<div class="error">Nessun utente specificato nell\'URL (es. ?id=Amore)</div>';
+      document.getElementById('client-title').innerText = "Errore";
+    } else {
+      document.getElementById('client-title').innerText = clientId;
+      caricaScheda();
+    }
 
-            try {
-                const response = await fetch(`${API_URL}?id=${encodeURIComponent(clientQuery)}`);
-                const clientData = await response.json();
+    let rawDataCache = [];
 
-                const appDiv = document.getElementById('app');
-                if (!clientData || clientData.length === 0) {
-                    appDiv.innerHTML = '<div class="card" style="text-align:center;">Nessuna scheda trovata per questo utente.</div>';
-                    return;
-                }
+    function caricaScheda() {
+      fetch(`${WEB_APP_URL}?id=${encodeURIComponent(clientId)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            document.getElementById('app').innerHTML = '<div class="error">Nessuna scheda trovata per questo utente.</div>';
+            return;
+          }
+          rawDataCache = data;
+          renderApp(data);
+          document.getElementById('save-bar').style.display = 'block';
+        })
+        .catch(error => {
+          console.error("Errore:", error);
+          document.getElementById('app').innerHTML = '<div class="error">Errore di connessione al database.</div>';
+        });
+    }
 
-                const exercises = {};
-                clientData.forEach(row => {
-                    let exName = row.esercizio || 'Esercizio';
-                    if (!exercises[exName]) exercises[exName] = [];
-                    exercises[exName].push(row);
-                });
+    function renderApp(data) {
+      const app = document.getElementById('app');
+      app.className = "";
+      app.innerHTML = "";
 
-                let html = '';
-                for (let exName in exercises) {
-                    let firstRow = exercises[exName][0];
-                    let noteTech = firstRow['note tecniche'] || '';
-                    
-                    html += `<div class="card">
-                        <div class="exercise-title">${exName}</div>`;
-                    if (noteTech) {
-                        html += `<div class="exercise-subtitle">Note: ${noteTech}</div>`;
-                    }
-                    
-                    exercises[exName].forEach((item) => {
-                        let numeroSerie = item.serie !== undefined ? item.serie : '-';
-                        let targetReps = item.ripetizioni !== undefined ? item.ripetizioni : '-';
-                        let caricoKg = item.kg !== undefined && item.kg !== null ? item.kg : '';
-                        let repsEffettuate = item['ripetizioni effettuate'] !== undefined && item['ripetizioni effettuate'] !== null ? item['ripetizioni effettuate'] : '';
-                        let noteCliente = item['note cliente'] !== undefined && item['note cliente'] !== null ? item['note cliente'] : '';
-
-                        html += `
-                            <div class="set-row">
-                                <div class="set-header">
-                                    <span>Set ${numeroSerie}</span>
-                                    <span>Target: ${targetReps} reps</span>
-                                </div>
-                                <div class="inputs-grid">
-                                    <div class="input-wrapper">
-                                        <label>KG Usati</label>
-                                        <input type="number" value="${caricoKg}" data-ex="${exName}" data-set="${numeroSerie}" class="input-kg" placeholder="0">
-                                    </div>
-                                    <div class="input-wrapper">
-                                        <label>Reps Fatte</label>
-                                        <input type="number" value="${repsEffettuate}" data-ex="${exName}" data-set="${numeroSerie}" class="input-reps" placeholder="-">
-                                    </div>
-                                </div>
-                                <div class="input-wrapper" style="margin-top: 6px;">
-                                    <label>Note Cliente</label>
-                                    <input type="text" value="${noteCliente}" data-ex="${exName}" data-set="${numeroSerie}" class="input-note" placeholder="Es. Facile, un po' di fastidio...">
-                                </div>
-                            </div>`;
-                    });
-                    html += `</div>`;
-                }
-
-                html += `<button class="btn-save" onclick="saveData('${clientQuery}')">Salva Modifiche</button>`;
-                appDiv.innerHTML = html;
-
-            } catch (error) {
-                document.getElementById('app').innerHTML = '<div class="card" style="text-align:center; color: var(--danger);">Errore di connessione al database. Riprova più tardi.</div>';
-            }
+      // Raggruppa per esercizio
+      const exercises = {};
+      data.forEach(row => {
+        const esName = row.esercizio || "Esercizio senza nome";
+        if (!exercises[esName]) {
+          exercises[esName] = {
+            noteTecniche: row["note tecniche"] || "",
+            sets: []
+          };
         }
+        exercises[esName].sets.push(row);
+      });
 
-        async function saveData(clientName) {
-            const setRows = document.querySelectorAll('.set-row');
-            let updatedData = [];
+      for (let [esName, details] of Object.entries(exercises)) {
+        let card = document.createElement('div');
+        card.className = 'exercise-card';
+        
+        let html = `
+          <div class="exercise-title">${esName}</div>
+          <div class="exercise-notes">Note: ${details.noteTecniche}</div>
+        `;
 
-            setRows.forEach(row => {
-                const kgInput = row.querySelector('.input-kg');
-                const repsInput = row.querySelector('.input-reps');
-                const noteInput = row.querySelector('.input-note');
+        details.sets.forEach((setRow, index) => {
+          const setNum = setRow.serie || (index + 1);
+          const targetReps = setRow.ripetizioni || "-";
+          const savedKg = setRow.kg !== undefined && setRow.kg !== null ? setRow.kg : "";
+          const savedReps = setRow["ripetizioni effettuate"] !== undefined && setRow["ripetizioni effettuate"] !== null ? setRow["ripetizioni effettuate"] : "";
+          const savedNote = setRow["note cliente"] !== undefined && setRow["note cliente"] !== null ? setRow["note cliente"] : "";
 
-                updatedData.push({
-                    cliente: clientName,
-                    esercizio: kgInput.getAttribute('data-ex'),
-                    set: kgInput.getAttribute('data-set'),
-                    kg: kgInput.value,
-                    repsEffettuate: repsInput.value,
-                    noteCliente: noteInput.value
-                });
-            });
+          html += `
+            <div class="set-row" data-esercizio="${esName}" data-set="${setNum}">
+              <div class="set-header">
+                <span>Set ${setNum}</span>
+                <span>Target: ${targetReps} reps</span>
+              </div>
+              <div class="inputs-grid">
+                <div class="input-group">
+                  <label>KG Usati</label>
+                  <input type="number" step="0.5" class="input-kg" value="${savedKg}" placeholder="0">
+                </div>
+                <div class="input-group">
+                  <label>Reps Fatte</label>
+                  <input type="text" class="input-reps" value="${savedReps}" placeholder="-">
+                </div>
+                <div class="input-group full-width">
+                  <label>Note Cliente</label>
+                  <textarea class="input-note" rows="1" placeholder="Es. Facile, un po' di fastidio...">${savedNote}</textarea>
+                </div>
+              </div>
+            </div>
+          `;
+        });
 
-            const btn = document.querySelector('.btn-save');
-            btn.innerText = "Salvataggio in corso...";
+        card.innerHTML = html;
+        app.appendChild(card);
+      }
+    }
 
-            try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(updatedData)
-                });
+    function salvaModifiche() {
+      const rowsToUpdate = [];
+      const setRows = document.querySelectorAll('.set-row');
 
-                alert("Modifiche salvate e inviate al coach con successo!");
-            } catch (err) {
-                alert("Errore durante il salvataggio.");
-            } finally {
-                btn.innerText = "Salva Modifiche";
-            }
-        }
+      setRows.forEach(row => {
+        const esercizio = row.getAttribute('data-esercizio');
+        const setNum = row.getAttribute('data-set');
+        const kg = row.querySelector('.input-kg').value;
+        const repsEffettuate = row.querySelector('.input-reps').value;
+        const noteCliente = row.querySelector('.input-note').value;
 
-        window.onload = initApp;
-    </script>
+        rowsToUpdate.push({
+          cliente: clientId,
+          esercizio: esercizio,
+          set: setNum,
+          kg: kg,
+          repsEffettuate: repsEffettuate,
+          noteCliente: noteCliente
+        });
+      });
+
+      const btn = document.querySelector('.save-btn');
+      btn.innerText = "Salvataggio in corso...";
+
+      fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(rowsToUpdate)
+      })
+      .then(() => {
+        btn.innerText = "Salvato con successo! ✓";
+        setTimeout(() => {
+          btn.innerText = "Salva Modifiche";
+        }, 2500);
+      })
+      .catch(error => {
+        console.error("Errore salvataggio:", error);
+        btn.innerText = "Errore nel salvataggio";
+        setTimeout(() => {
+          btn.innerText = "Salva Modifiche";
+        }, 2500);
+      });
+    }
+  </script>
 </body>
 </html>
