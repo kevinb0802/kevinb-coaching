@@ -172,8 +172,8 @@
     </div>
 
     <script>
-        // INCOLLA QUI L'URL DELLA TUA WEB APP DI GOOGLE APPS SCRIPT
-        const API_URL = 'https://script.google.com/macros/s/AKfycbz9S8qlsZ210ifoD_tCyfaEaHEMQ1iTm8eVOf5vqFzgjgcPp-x2MRFvw_MZ1oWr_W_A/exec';
+        // URL AGGIORNATO DI GOOGLE APPS SCRIPT
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzdUYcnmM7EH6DLHxPJ2F1ULnm10T8RKxhtuAijtmO_8ZQGTD-Zodr-8sf-DQ4agt9z/exec';
 
         async function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -281,7 +281,7 @@
                 await fetch(API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(updatedData)
                 });
 
