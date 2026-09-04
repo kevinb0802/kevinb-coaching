@@ -136,31 +136,25 @@
     let activeDay = '';
 
     async function loadSheetData() {
-      if (MASTER_CSV_URL.startsWith('INSERISCI_QUI')) {
-        document.getElementById('workout-container').innerHTML = `<div id="loading">Incolla il link CSV del foglio Google nel codice.</div>`;
-        return;
-      }
-
-      try {
-        const response = await fetch(MASTER_CSV_URL);
-        const csvText = await response.text();
-        const rows = parseCSV(csvText);
-
-        // Filtra in base alla colonna "Cliente" confrontandola con l'ID nell'URL
-        allExercises = rows.filter(r => r.cliente && r.cliente.trim().toUpperCase() === currentClient);
-
-        // Estrae i giorni unici presenti per questo cliente
-        availableDays = [...new Set(allExercises.map(r => r.giorno))].filter(Boolean);
-
-        buildDayButtons();
-        if (availableDays.length > 0) {
-          selectDay(availableDays[0]);
-        } else {
-          document.getElementById('workout-container').innerHTML = `<div id="loading">Nessun esercizio trovato per questo cliente.</div>`;
-        }
-      } catch (error) {
-        document.getElementById('workout-container').innerHTML = `<div id="loading">Errore nel caricamento della scheda.</div>`;
-      }
+  try {
+    const response = await fetch(MASTER_CSV_URL);
+    const csvText = await response.text();
+    const rows = parseCSV(csvText);
+    
+    allExercises = rows.filter(r => r.cliente && r.cliente.trim().toUpperCase() === currentClient);
+    availableDays = [...new Set(allExercises.map(r => r.giorno))].filter(Boolean);
+    
+    buildDayButtons();
+    if (availableDays.length > 0) {
+      selectDay(availableDays[0]);
+    } else {
+      document.getElementById('workout-container').innerHTML = '<div id="loading">Nessun esercizio trovato per questo cliente. (Verifica che l\'ID nella URL sia corretto)</div>';
+    }
+  } catch (error) {
+    console.error("Errore dettagliato caricamento:", error);
+    document.getElementById('workout-container').innerHTML = '<div id="loading">Errore nel caricamento: ' + error.message + '</div>';
+  }
+}
     }
 
     function parseCSV(text) {
