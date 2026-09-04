@@ -241,38 +241,38 @@
         container.appendChild(card);
       });
     }
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMJR7HxijdmLqyocDuHnfCohtavuPoBqLgUokwSRa41NTOHQmnurhfuldnéwnGre7g/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMJR7HxjldmLqyocDuHnfCohtavuP9qLuokwSRa41NTOHQmnurhfwldnewnGre7g/exec";
 
-  function saveData(key, field, value) {
-    const current = JSON.parse(localStorage.getItem(key) || '{}');
-    current[field] = value;
-    localStorage.setItem(key, JSON.stringify(current));
-   const urlParams = new URLSearchParams(window.location.search);
-    const rawClient = urlParams.get('id') || 'AMORE';
-    const clientName = rawClient.trim().toUpperCase();
+function saveData(key, field, value) {
+  const current = JSON.parse(localStorage.getItem(key) || '{}');
+  current[field] = value;
+  localStorage.setItem(key, JSON.stringify(current));
 
-    const payload = {
-      client: clientName,
-      day: current.day || '',
-      exercise: current.exercise || key,
-      weight: field === 'weight' ? value : (current.weight || ''),
-      notes: field === 'notes' ? value : (current.notes || '')
-    };
+  const urlParams = new URLSearchParams(window.location.search);
+  const rawClient = urlParams.get('id') || 'AMORE';
+  const clientName = rawClient.trim().toUpperCase();
 
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-    .then(() => {
-      console.log("Aggiornato sul Google Sheet!");
-    })
-    .catch(error => {
-      console.error("Errore invio:", error);
-    });
-  }
+  const payload = {
+    client: clientName,
+    day: current.day || '',
+    exercise: current.exercise || key,
+    weight: field === 'weight' ? value : (current.weight || ''),
+    notes: field === 'notes' ? value : (current.notes || '')
+  };
 
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    console.log("Aggiornato sul Google Sheet!");
+  })
+  .catch(error => {
+    console.error("Errore invio:", error);
+  });
+}
   loadSheetData();
