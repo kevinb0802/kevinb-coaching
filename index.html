@@ -243,7 +243,7 @@
     }
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMJR7HxjldmLqyocDuHnfCohtavuP9qLuokwSRa41NTOHQmnurhfwldnewnGre7g/exec";
 
-function saveData(key, field, value) {
+    function saveData(key, field, value) {
   const current = JSON.parse(localStorage.getItem(key) || '{}');
   current[field] = value;
   localStorage.setItem(key, JSON.stringify(current));
@@ -275,4 +275,5 @@ function saveData(key, field, value) {
     console.error("Errore invio:", error);
   });
 }
-  loadSheetData();
+
+loadSheetData();
