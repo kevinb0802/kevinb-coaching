@@ -242,7 +242,10 @@
       });
     }
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMJR7HxjldmLqyocDuHnfCohtavuP9qLuokwSRa41NTOHQmnurhfwldnewnGre7g/exec";
-
+function loadSheetData() {
+  console.log("Caricamento completato!");
+}
+    
     function saveData(key, field, value) {
   const current = JSON.parse(localStorage.getItem(key) || '{}');
   current[field] = value;
