@@ -46,7 +46,7 @@
         <p>© 2026 Kevin Beraldo Coaching. Tutti i diritti riservati.</p>
     </footer>
 
-    <!-- Script di logica mappato sulle tue colonne reali -->
+    <!-- Script di logica mappato esattamente sulle tue colonne -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const cliente = urlParams.get('id');
@@ -84,7 +84,7 @@
                     let currentDay = '';
 
                     data.forEach(item => {
-                        // Se il giorno cambia, stampiamo un'intestazione del giorno (Colonna B)
+                        // Gestione separazione per Giorno
                         const giorno = item.Giorno || '';
                         if (giorno !== currentDay) {
                             currentDay = giorno;
@@ -95,7 +95,7 @@
                             <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm space-y-3">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-base text-white">${item.Esercizio || 'Esercizio'}</h3>
-                                    <span class="text-xs bg-gray-800 text-gray-300 px-2.5 py-1 rounded-md">${item.Gruppo_Muscolare || item.Gruppi_Muscolari || ''}</span>
+                                    <span class="text-xs bg-gray-800 text-gray-300 px-2.5 py-1 rounded-md">${item.gruppi_muscolari || item['gruppi muscolari'] || ''}</span>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 text-sm bg-gray-950/60 p-3 rounded-lg border border-gray-800/60 text-center">
                                     <div>
@@ -111,7 +111,7 @@
                                         <span class="font-semibold text-gray-200">${item.Recupero || '-'}</span>
                                     </div>
                                 </div>
-                                ${item.Note ? `<p class="text-xs text-gray-400 italic bg-gray-950/30 p-2 rounded">Note: ${item.Note}</p>` : ''}
+                                ${item.Note_Tecniche || item['Note Tecniche'] ? `<p class="text-xs text-gray-400 italic bg-gray-950/30 p-2 rounded">Note: ${item.Note_Tecniche || item['Note Tecniche']}</p>` : ''}
                             </div>
                         `;
                     });
